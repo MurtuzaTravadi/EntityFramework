@@ -44,7 +44,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public virtual Expression<Func<ValueBuffer, object>> CreateMaterializer(
+        public virtual Expression<Func<ValueBuffer, Tuple<object, ValueBuffer>>> CreateMaterializer(
             IEntityType entityType,
             SelectExpression selectExpression,
             Func<IProperty, SelectExpression, int> projectionAdder,
@@ -77,7 +77,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
             if (concreteEntityTypes.Count == 1
                 && concreteEntityTypes[0].RootType() == concreteEntityTypes[0])
             {
-                return Expression.Lambda<Func<ValueBuffer, object>>(materializer, valueBufferParameter);
+                return Expression.Lambda<Func<ValueBuffer, Tuple<object, ValueBuffer>>>(materializer, valueBufferParameter);
             }
 
             var discriminatorProperty = _relationalAnnotationProvider.For(concreteEntityTypes[0]).DiscriminatorProperty;
@@ -99,7 +99,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
                 selectExpression.Predicate
                     = new DiscriminatorPredicateExpression(discriminatorPredicate, querySource);
 
-                return Expression.Lambda<Func<ValueBuffer, object>>(materializer, valueBufferParameter);
+                return Expression.Lambda<Func<ValueBuffer, Tuple<object, ValueBuffer>>>(materializer, valueBufferParameter);
             }
 
             var discriminatorValueVariable
@@ -163,7 +163,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
             selectExpression.Predicate
                 = new DiscriminatorPredicateExpression(discriminatorPredicate, querySource);
 
-            return Expression.Lambda<Func<ValueBuffer, object>>(
+            return Expression.Lambda<Func<ValueBuffer, Tuple<object, ValueBuffer>>>(
                 Expression.Block(new[] { discriminatorValueVariable }, blockExpressions),
                 valueBufferParameter);
         }

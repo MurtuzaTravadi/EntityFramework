@@ -35,7 +35,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public virtual Expression<Func<IEntityType, ValueBuffer, object>> CreateMaterializer(IEntityType entityType)
+        public virtual Expression<Func<IEntityType, ValueBuffer, Tuple<object, ValueBuffer>>> CreateMaterializer(IEntityType entityType)
         {
             Check.NotNull(entityType, nameof(entityType));
 
@@ -50,7 +50,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
 
             if (concreteEntityTypes.Count == 1)
             {
-                return Expression.Lambda<Func<IEntityType, ValueBuffer, object>>(
+                return Expression.Lambda<Func<IEntityType, ValueBuffer, Tuple<object, ValueBuffer>>>(
                     _entityMaterializerSource
                         .CreateMaterializeExpression(
                             concreteEntityTypes[0], valueBufferParameter),
@@ -91,7 +91,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
                         blockExpressions[0]);
             }
 
-            return Expression.Lambda<Func<IEntityType, ValueBuffer, object>>(
+            return Expression.Lambda<Func<IEntityType, ValueBuffer, Tuple<object, ValueBuffer>>>(
                 Expression.Block(blockExpressions),
                 entityTypeParameter,
                 valueBufferParameter);

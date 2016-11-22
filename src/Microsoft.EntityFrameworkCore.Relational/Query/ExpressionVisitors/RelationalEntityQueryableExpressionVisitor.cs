@@ -342,7 +342,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors
             string entityType,
             bool trackingQuery,
             IKey key,
-            Func<ValueBuffer, object> materializer,
+            Func<ValueBuffer, Tuple<object, ValueBuffer>> materializer,
             bool useQueryBuffer)
             where TEntity : class
         => !useQueryBuffer

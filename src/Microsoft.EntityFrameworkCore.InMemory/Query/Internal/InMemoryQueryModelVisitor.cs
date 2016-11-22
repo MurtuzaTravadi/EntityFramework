@@ -222,9 +222,9 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
         private sealed class RelatedEntitiesLoader : IRelatedEntitiesLoader
         {
             private readonly IEntityType _targetType;
-            private readonly Func<IEntityType, ValueBuffer, object> _materializer;
+            private readonly Func<IEntityType, ValueBuffer, Tuple<object, ValueBuffer>> _materializer;
 
-            public RelatedEntitiesLoader(IEntityType targetType, Func<IEntityType, ValueBuffer, object> materializer)
+            public RelatedEntitiesLoader(IEntityType targetType, Func<IEntityType, ValueBuffer, Tuple<object, ValueBuffer>> materializer)
             {
                 _targetType = targetType;
                 _materializer = materializer;
@@ -355,7 +355,7 @@ namespace Microsoft.EntityFrameworkCore.Query.Internal
             QueryContext queryContext,
             IEntityType entityType,
             IKey key,
-            Func<IEntityType, ValueBuffer, object> materializer,
+            Func<IEntityType, ValueBuffer, Tuple<object, ValueBuffer>> materializer,
             bool queryStateManager)
             where TEntity : class
         => ((InMemoryQueryContext)queryContext).Store

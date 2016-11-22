@@ -24,7 +24,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
             [NotNull] string entityType,
             bool trackingQuery,
             [NotNull] IKey key,
-            [NotNull] Func<ValueBuffer, object> materializer)
+            [NotNull] Func<ValueBuffer, Tuple<object, ValueBuffer>> materializer)
             : base(querySource)
         {
             IsTrackingQuery = trackingQuery;
@@ -55,7 +55,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        protected virtual Func<ValueBuffer, object> Materializer { get; }
+        protected virtual Func<ValueBuffer, Tuple<object, ValueBuffer>> Materializer { get; }
 
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used

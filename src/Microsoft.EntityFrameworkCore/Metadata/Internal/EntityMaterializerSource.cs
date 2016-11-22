@@ -120,7 +120,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
             {
                 return Expression.Call(
                     Expression.Constant(materializer),
-                    ((Func<ValueBuffer, object>)materializer.CreateEntity).GetMethodInfo(),
+                    ((Func<ValueBuffer, Tuple<object, ValueBuffer>>)materializer.CreateEntity).GetMethodInfo(),
                     valueBufferExpression);
             }
 
@@ -164,6 +164,10 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
                             targetMember.Type,
                             indexMap?[property.GetIndex()] ?? property.GetIndex(),
                             property)));
+
+            var returnType = typeof(Tuple<,>).MakeGenericType(entityType.ClrType, typeof(ValueBuffer));
+
+            blockExpressions.Add(Expression.Variable(returnType, "returnValue"));
 
             blockExpressions.Add(instanceVariable);
 

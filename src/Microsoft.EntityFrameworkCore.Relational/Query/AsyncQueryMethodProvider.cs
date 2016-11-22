@@ -684,19 +684,19 @@ namespace Microsoft.EntityFrameworkCore.Query
         private static IAsyncRelatedEntitiesLoader _CreateReferenceRelatedEntitiesLoader(
             int valueBufferOffset,
             int queryIndex,
-            Func<ValueBuffer, object> materializer)
+            Func<ValueBuffer, Tuple<object, ValueBuffer>> materializer)
             => new ReferenceRelatedEntitiesLoader(valueBufferOffset, queryIndex, materializer);
 
         private sealed class ReferenceRelatedEntitiesLoader : IAsyncRelatedEntitiesLoader
         {
             private readonly int _valueBufferOffset;
             private readonly int _queryIndex;
-            private readonly Func<ValueBuffer, object> _materializer;
+            private readonly Func<ValueBuffer, Tuple<object, ValueBuffer>> _materializer;
 
             public ReferenceRelatedEntitiesLoader(
                 int valueBufferOffset,
                 int queryIndex,
-                Func<ValueBuffer, object> materializer)
+                Func<ValueBuffer, Tuple<object, ValueBuffer>> materializer)
             {
                 _valueBufferOffset = valueBufferOffset;
                 _queryIndex = queryIndex;
@@ -777,20 +777,20 @@ namespace Microsoft.EntityFrameworkCore.Query
             QueryContext queryContext,
             ShaperCommandContext shaperCommandContext,
             int queryIndex,
-            Func<ValueBuffer, object> materializer)
+            Func<ValueBuffer, Tuple<object, ValueBuffer>> materializer)
             => new CollectionRelatedEntitiesLoader(
                 queryContext, shaperCommandContext, queryIndex, materializer);
 
         private class CollectionRelatedEntitiesLoader : IAsyncRelatedEntitiesLoader
         {
             private readonly AsyncIncludeCollectionIterator _includeCollectionIterator;
-            private readonly Func<ValueBuffer, object> _materializer;
+            private readonly Func<ValueBuffer, Tuple<object, ValueBuffer>> _materializer;
 
             public CollectionRelatedEntitiesLoader(
                 QueryContext queryContext,
                 ShaperCommandContext shaperCommandContext,
                 int queryIndex,
-                Func<ValueBuffer, object> materializer)
+                Func<ValueBuffer, Tuple<object, ValueBuffer>> materializer)
             {
                 _includeCollectionIterator
                     = new AsyncIncludeCollectionIterator(

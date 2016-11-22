@@ -25,7 +25,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
             [NotNull] string entityType,
             bool trackingQuery,
             [NotNull] IKey key,
-            [NotNull] Func<ValueBuffer, object> materializer)
+            [NotNull] Func<ValueBuffer, Tuple<object, ValueBuffer>> materializer)
             : base(querySource, entityType, trackingQuery, key, materializer)
         {
         }
@@ -52,7 +52,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal
                 }
             }
 
-            return (TEntity)Materializer(valueBuffer);
+            return (TEntity)Materializer(valueBuffer).Item1;
         }
 
         /// <summary>
